@@ -35,8 +35,6 @@ public class Welcome {
         System.out.println("Your sum is " + (num1 + num2));
         System.out.println("Your product is " + (num1 * num2));
         System.out.println("Your difference is " + (num1 - num2));
-
-
     }
 }
 
