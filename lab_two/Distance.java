@@ -7,6 +7,7 @@ import java.util.Scanner;  // Import the Scanner class
 public class Distance {
     public static void main(String[] args) {
 
+
         //Create a Scanner object that reads input from the standard input stream
         Scanner scanner = new Scanner(System.in);
 
