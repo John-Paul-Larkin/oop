@@ -8,7 +8,8 @@ public class Distance {
     public static void main(String[] args) {
 
 
-        //Create a Scanner object that reads input from the standard input stream
+
+        //Create a Scanner object that reads input from the standard input streams
         Scanner scanner = new Scanner(System.in);
 
         // Read the users input for miles
