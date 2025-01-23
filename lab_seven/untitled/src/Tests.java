@@ -1,3 +1,8 @@
+// John Paul Larkin
+// C00001754
+// OOP - Lab seven - 20/1/25
+
+import java.util.Scanner;
 import java.util.Random;
 
 public class Tests {
@@ -20,14 +25,20 @@ public class Tests {
     }
 
     public static void testItem() {
+        // Create a new Random object
         Random random = new Random();
+
+        // Create an array of 10 Item objects
         Item[] items = new Item[10];
 
-        // Initialize array with Item objects and set random price and stock
+        // Loop through the array and set the price and stock to random values
         for (int i = 0; i < items.length; i++) {
+            // Create a new Item object
             items[i] = new Item();
-            items[i].setPrice(random.nextInt(20) + 1); // Random price between 1 and 20
-            items[i].setStock(random.nextInt(7));      // Random stock between 0 and 6
+            // Random price between 1 and 20 - add 1 as Zero index
+            items[i].setPrice(random.nextInt(20) + 1); 
+            // Random stock between 0 and 6
+            items[i].setStock(random.nextInt(7));      
         }
 
         // Print out each item, its index, price, and stock
@@ -36,40 +47,60 @@ public class Tests {
             System.out.printf("%5d | %5d | %5d%n", i, items[i].getPrice(), items[i].getStock());
         }
 
-        // Example usage of buyItem and totalPrice methods
-        buyItem(items, 2, 3); // Try buying 3 units of the item at index 2
-        totalPrice(items);   // Print total price of all stock
+        // Call the buyItem method
+        buyItem(items); 
+        // Print total price of all stock
+        totalPrice(items);   
     }
 
     // Method to buy an item
-    public static void buyItem(Item[] items, int index, int amount) {
+    public static void buyItem(Item[] items) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Get user input for the index and amount of the item they want to buy
+        System.out.print("Enter the index of the item you want to buy: ");
+        int index = scanner.nextInt();
+        System.out.print("Enter the amount of the item you want to buy: ");
+        int amount = scanner.nextInt();
+        
+        // Check if the index is in range 
         if (index < 0 || index >= items.length) {
             System.out.println("Invalid item index.");
             return;
         }
 
+        // Get the item at the index
         Item item = items[index];
+        // Check if the amount is greater than the available stock
         if (amount > item.getStock()) {
             System.out.println("Not enough stock");
         } else {
+            // Calculate the total cost of the items
             int totalCost = amount * item.getPrice();
-            item.setStock(item.getStock() - amount); // Reduce stock
+            // Reduce stock
+            item.setStock(item.getStock() - amount); 
+            // Print total cost
             System.out.println("Total cost for item: " + totalCost);
         }
+        // Close the scanner
+        scanner.close();
     }
 
     // Method to calculate total price of all stock
     public static void totalPrice(Item[] items) {
-        int total = 0;
+        int total = 0;  
+        // Loop through the array and calculate the total price of all stock
         for (Item item : items) {
             total += item.getPrice() * item.getStock();
         }
+        // Print total price
         System.out.println("Total price of all stock: " + total);
     }
 
     public static void testRecipe() {
         // Create an array of 4 Recipe objects
         Recipe[] recipes = new Recipe[4];
+        // Initialise the array with Recipe objects
         recipes[0] = new Recipe("Cake", true, false, true);
         recipes[1] = new Recipe("Salad", false, false, false);
         recipes[2] = new Recipe("Burger", true, true, true);
@@ -86,8 +117,11 @@ public class Tests {
 
     // Method to print vegetarian recipes (no meat)
     public static void isVegetarian(Recipe[] recipes) {
+        // Loop throught each recipe in the array
         for (Recipe recipe : recipes) {
+            // Check if the recipe is vegetarian
             if (!recipe.hasMeat()) {
+                // Print the recipe name
                 System.out.println(recipe.getName());
             }
         }
@@ -95,8 +129,11 @@ public class Tests {
 
     // Method to print vegan recipes (no meat and no dairy)
     public static void isVegan(Recipe[] recipes) {
+        // Loop throught each recipe in the array
         for (Recipe recipe : recipes) {
+            // Check if the recipe is vegan (no meat and no dairy)
             if (!recipe.hasMeat() && !recipe.hasDairy()) {
+                // Print the recipe name
                 System.out.println(recipe.getName());
             }
         }
