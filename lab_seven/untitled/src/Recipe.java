@@ -1,3 +1,7 @@
+// John Paul Larkin
+// C00001754
+// OOP - Lab seven - 20/1/25
+
 public class Recipe {
     // Private global variables
     private String name;
@@ -5,7 +9,7 @@ public class Recipe {
     private boolean meat;
     private boolean gluten;
 
-    // Constructor with 4 parameters
+    // Constructor 
     public Recipe(String name, boolean dairy, boolean meat, boolean gluten) {
         this.name = name;
         this.dairy = dairy;
@@ -13,11 +17,12 @@ public class Recipe {
         this.gluten = gluten;
     }
 
-    // Getter and Setter for 'name'
+    // Getter for 'name'
     public String getName() {
         return name;
     }
 
+    // Setter for 'name'
     public void setName(String name) {
         this.name = name;
     }
@@ -25,6 +30,11 @@ public class Recipe {
     // Getter for 'dairy'
     public boolean hasDairy() {
         return dairy;
+    }
+
+    // Setter for 'dairy'
+    public void setDairy(boolean dairy) {
+        this.dairy = dairy;
     }
 
     // Getter for 'meat'
