@@ -1,3 +1,7 @@
+// John Paul Larkin
+// C00001754
+// OOP - Lab eight - 14/2/25
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
