@@ -1,24 +1,38 @@
+//Package java.awt Contains all of the classes for creating user interfaces and for painting graphics and images.
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+// interfaces
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer; // Explicitly import the Swing Timer
+// Swing is used to create a graphical user interface
 
-import java.util.ArrayList;    // For ArrayList
-import java.util.Iterator;     // For Iterator
-import java.util.List;         // For List
-import java.util.Random;       // For Random
+// JFrame class, which is a top-level window with a title and border used to create a GUI application.
+import javax.swing.JFrame;
+
+// JPanel class, a lightweight container that can be used to organise components in a window.
+import javax.swing.JPanel;
+
+// SwingUtilities class, which is a utility class for Swing.
+// Such as ensuring that GUI updates are performed on the Event Dispatch Thread.
+import javax.swing.SwingUtilities;
+
+// Timer class, which fires one or more action events after a specified delay.
+import javax.swing.Timer;
+
+import java.util.ArrayList;   
+import java.util.Iterator;    
+import java.util.List;         
+import java.util.Random;      
+
+
 
 public class BasketGame {
     public static void main(String[] args) {
@@ -31,16 +45,17 @@ public class BasketGame {
             frame.setVisible(true);
         });
     }
+    
 }
 
 // GamePanel handles rendering, game updates, and input.
 class GamePanel extends JPanel implements ActionListener, KeyListener, MouseListener {
-    private Timer timer;         // Using javax.swing.Timer
+    final private Timer timer;
     private Basket basket;
     private ObjectManager objectManager;
     private Score score;
 
-    private static final int PANEL_WIDTH = 400;
+    private static final int PANEL_WIDTH = 600;
     private static final int PANEL_HEIGHT = 600;
 
     private boolean leftPressed = false;
@@ -74,11 +89,6 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         timer.start();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        updateGame();
-        repaint();
-    }
 
     // Update positions, handle collisions, and manage game state.
     public void updateGame() {
@@ -104,6 +114,8 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         objectManager.removeOffScreenObjects();
     }
 
+
+    // This method is inherited from the JPanel class and overrides 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -121,17 +133,30 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         }
     }
 
-    // KeyListener methods.
+    // All below methods are are implementations of the abstract methods
+    // declared in the interfaces that GamePanel implements 
+    // ie. ActionListener, KeyListener, MouseListener
+
+    
+    // ActionListener interface methods
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        updateGame();
+        repaint();
+    }
+
+    // KeyListener interface methods.
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_LEFT) {
+            //Constant for the non-numpad left arrow key. - 37
             leftPressed = true;
         } else if (key == KeyEvent.VK_RIGHT) {
+            //Constant for the non-numpad right arrow key. - 39
             rightPressed = true;
         }
     }
-
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
@@ -141,18 +166,14 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
             rightPressed = false;
         }
     }
+    @Override public void keyTyped(KeyEvent e) {}
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // Not used.
-    }
-
-    // MouseListener method to restart the game on click.
+    // MouseListener interface methods
     @Override
     public void mouseClicked(MouseEvent e) {
+        //  restart the game on mouse click.
         resetGame();
     }
-
     @Override public void mousePressed(MouseEvent e) {}
     @Override public void mouseReleased(MouseEvent e) {}
     @Override public void mouseEntered(MouseEvent e) {}
