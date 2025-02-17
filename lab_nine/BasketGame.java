@@ -1,4 +1,8 @@
-//Package java.awt Contains all of the classes for creating user interfaces and for painting graphics and images.
+// John Paul Larkin
+// c00001754
+// 17/02/2025 - Lab Nine
+
+//Package java.awt Contains all the classes for creating user interfaces and for painting graphics and images.
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -13,7 +17,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
 // Swing is used to create a graphical user interface
-// JFrame class, which is a top-level window with a title and border used to create a GUI application.
+// JFrame class, which is a top-level window with a title and border used to create the GUI.
 import javax.swing.JFrame;
 
 // JPanel class, a lightweight container that can be used to organise components in a window.
@@ -32,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;         
 
 public class BasketGame {
+    // Main method to create and show the GUI.
     public static void main(String[] args) {
         // Use SwingUtilities to create and show the GUI on the Event Dispatch Thread.
         SwingUtilities.invokeLater(() -> {
@@ -41,7 +46,7 @@ public class BasketGame {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             // Add a GamePanel object to the frame.
             frame.add(new GamePanel());
-            // Pack the frame.
+            // Pack the frame. - Resize the frame to fit the components.
             frame.pack();
             // Passing null centres the frame on the screen.
             frame.setLocationRelativeTo(null);
@@ -69,14 +74,14 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         setPreferredSize(new Dimension(PANEL_SIZE, PANEL_SIZE));
         setBackground(Color.WHITE);
         setFocusable(true);
+        // Add listeners for the key and mouse events to the panel. 
         addKeyListener(this);
         addMouseListener(this);
 
-        initGame();
-
-        // Use a Swing Timer at ~60 FPS (1000ms / 15 ≈ 66.7 FPS)
+        // Use a Swing Timer at 15ms
         timer = new Timer(15, this);
-        timer.start();
+        // actionPerformed method is invoked every 15ms after the timer starts.
+        startGame();
     }
 
     // Initialises game balls and state.
@@ -89,8 +94,8 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         ballManager = new BallManager();
     }
 
-    // Resets the game when the user clicks the mouse.
-    public void resetGame() {
+    // Starts / Resets the game when the user clicks the mouse.
+    public void startGame() {
         initGame();
         timer.start();
     }
@@ -98,7 +103,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
 
     // Update positions, handle collisions, and manage game state.
     public void updateGame() {
-        // Stop the game if score is negative (game over).
+        // Stop the game if score is negative ( game is over).
         if (score.getScore() < 0) {
             timer.stop();
             return;
@@ -142,14 +147,15 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         }
     }
 
-    // All below methods are are implementations of the abstract methods
+    // All below methods are implementations of the abstract methods
     // declared in the interfaces that GamePanel implements 
-    // ie. ActionListener, KeyListener, MouseListener
+    // i.e. ActionListener, KeyListener, MouseListener
 
     
     // ------  ActionListener interface methods ------
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Invoked every 15ms while the timer is running.
         updateGame();
         repaint();
     }
@@ -159,6 +165,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     public void keyPressed(KeyEvent e) {
         // When the user presses a key, get the key code.
         int key = e.getKeyCode();
+        // We are only interested in the left and right arrow keys.
         if (key == KeyEvent.VK_LEFT) {
             // Constant for the left arrow key. - 37
             leftPressed = true;
@@ -179,7 +186,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     @Override
     public void mouseClicked(MouseEvent e) {
         //  restart the game on mouse click.
-        resetGame();
+        startGame();
     }
     @Override public void mousePressed(MouseEvent e) {}
     @Override public void mouseReleased(MouseEvent e) {}
@@ -189,32 +196,34 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
 
 // Basket represents the player-controlled object at the bottom.
 class Basket {
-    // Define private variables for the basket's x and y coordinates.
-    private int x, y;
+    // Define private variables for the basket's x coordinate.
+    private int x;
+    // Default y-coordinate of the basket. 50 pixels from the bottom of the panel.
+    final private int y = GamePanel.PANEL_SIZE - 50; 
+
     private static final int BASKET_SPEED = 5;
     // Define dimensions of the basket.
     private static final int BASKET_WIDTH = 60;
     private static final int BASKET_HEIGHT = 20;
-    // Default y-coordinate of the basket. 50 pixels from the bottom of the panel.
-    private static final int DEFAULT_Y = GamePanel.PANEL_SIZE - 50; 
 
-    // Constructor uses PANEL_SIZE to center the basket horizontally
+    // Constructor uses PANEL_SIZE to initially center the basket horizontally
     public Basket() {
         this.x = GamePanel.PANEL_SIZE / 2 - BASKET_WIDTH / 2;
-        this.y = DEFAULT_Y;
     }
 
-    // Moves the basket left, ensuring it doesn't leave the screen.
+    // Moves the basket left within the panel bounds.
     public void moveLeft() {
+        // max of 0 ensure the basket doesn't move off the left edge of the panel.
         x = Math.max(0, x - BASKET_SPEED);
     }
 
     // Moves the basket right within the panel bounds.
     public void moveRight() {
+        // min of PANEL_SIZE - BASKET_WIDTH ensure the basket doesn't move off the right edge of the panel.
         x = Math.min(GamePanel.PANEL_SIZE - BASKET_WIDTH, x + BASKET_SPEED);
     }
 
-    // Returns the basket's bounding rectangle for collision detection.
+    // Returns the basket's bounding rectangle for collision detection with the balls.
     public Rectangle getBounds() {
         return new Rectangle(x, y, BASKET_WIDTH, BASKET_HEIGHT);
     }
@@ -231,13 +240,16 @@ abstract class FallingBall {
     // Define a public constant for ball size.
     public static final int BALL_DIAMETER = 20;
     
-    protected int x, y;
+    // Define protected variables for the ball's x and y coordinates. 
+    protected int x;
+    // Y will always start at 0. - Top of the panel.
+    protected int y = 0;
+    // Define protected variable for the ball's speed.
     protected final int speed;
 
     // Constructor for the FallingBall class.
     public FallingBall(int x, int speed) {
         this.x = x;
-        this.y = 0;
         this.speed = speed;
     }
 
@@ -246,7 +258,7 @@ abstract class FallingBall {
         y += speed;
     }
 
-    // Getter for the y-coordinate - used for rreaching bottom
+    // Getter for the y-coordinate - used for reaching bottom
     public int getY() {
         return y;
     }
@@ -263,7 +275,7 @@ abstract class FallingBall {
     public abstract void applyEffect(Score score);
 }
 
-// GoodBall increases the score when caught in the basket.
+// GoodBalls are green increases the score when caught in the basket.
 class GoodBall extends FallingBall {
     public GoodBall(int x, int speed) {
         super(x, speed);
@@ -283,7 +295,7 @@ class GoodBall extends FallingBall {
     }
 }
 
-// BadBall decreases the score when caught.
+// BadBall are red and decreases the score when caught.
 class BadBall extends FallingBall {
     public BadBall(int x, int speed) {
         super(x, speed);
@@ -306,15 +318,15 @@ class BadBall extends FallingBall {
 // BallManager handles creation, updating, and drawing of the falling balls.
 class BallManager {
     private final Random random;
-    // List of falling balls. 
+    // Define a List of falling balls. 
     private final List<FallingBall> balls;
 
     public BallManager() {
         this.random = new Random();
-        this.balls = new ArrayList<FallingBall>();
+        this.balls = new ArrayList<>();
     }
 
-    // Spawns a random number (betweeen 3 and 6 inclusive) of falling objects at random positions.
+    // Spawns a random number (between 3 and 6 inclusive) of falling objects at random positions.
     public void spawnBalls() {
         // Random number between 3 and 6.
         int count = random.nextInt(3,7);
@@ -341,7 +353,7 @@ class BallManager {
 
     // Updates positions of balls and checks for collisions with the basket.
     public void updateBalls(Basket basket, Score score) {
-        // Iterator for the list of balls.
+        // Create an iterator for the list of balls.
         Iterator<FallingBall> iterator = balls.iterator();
         // Loop through the list of balls.
         while (iterator.hasNext()) {
@@ -349,7 +361,7 @@ class BallManager {
             // Update the ball's position on the y-axis.
             ball.updatePosition();
 
-            // If ball intersects with the basket, apply effect and remove it
+            // If ball touches with the basket, apply effect and remove it
             if (ball.getBounds().intersects(basket.getBounds())) {
                 // Effect is either to increment or decrement the score.
                 ball.applyEffect(score);
@@ -359,7 +371,7 @@ class BallManager {
         }
     }
 
-    // Removes balls that have fallen off the screen.
+    // Removes balls that have fallen off the screen. beyond the PANEL_SIZE.
     public void removeOffScreenBalls() {
         // Iterate through the list of balls.
         // If the balls y-coordinate is greater than the panel size, remove it.
