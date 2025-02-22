@@ -90,15 +90,9 @@ class Hangman
 		scan.close();
 	}
 
-	/**
-	 * Initialises the game by reading words from Words.txt, selecting a random winning word,
-	 * and initialising the masked word output.
-	 *
-	 * @return true if the initialisation is successful; false otherwise.
-	 */
-
-    // initialise game
-		// Read Words.txt file and build a word list
+	// Initialises the game by reading words from Words.txt, selecting a random winning word,
+	// and initialising the masked word output.
+	//  return true if the initialisation is successful; false otherwise.
 	private boolean initialiseGame() {
         // Crete a list of strings to store the words
 		List<String> wordsList = new ArrayList<>();
@@ -109,7 +103,7 @@ class Hangman
 			Scanner fileScanner = new Scanner(file);
             // while there is another line in the file
 			while(fileScanner.hasNextLine()){
-                // get next line and remove whitespace
+                // get next line and remove whitespacec
 				String word = fileScanner.nextLine().trim();
                 // If the line is not empty add it to the word list
 				if (!word.isEmpty()) { 
