@@ -3,8 +3,6 @@
 // 13/3/25
 // OOP CA 2
 
-// note i ran out of time to to properly do the class diagram
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,7 +10,7 @@ import java.util.Scanner;
 // ABSTRACT CLASS - Vehicle
 // Demonstrates abstraction (this classs cannot be directly instantiated)
 // and encapsulation (private fields with public getters/setters)
-// and contains an abstract method that subclasses(Car and Truck) must implement.
+// contains an abstract method that child classes(Car and Truck) must implement.
 abstract class Vehicle {
 
     // Vehicles have a make, the year in which they were made, and mileage.
@@ -54,8 +52,8 @@ abstract class Vehicle {
     public abstract int getNumberOfWheels();
 
     // This method can be overridden by car and Truck subclasses 
-    // not abstract because it has a default implementation - does not need to be overrideen in child classes
-    // although it is in the examples
+    // not abstract because it has a concrete implementation - does not need to be overrideen in child classes
+    // although it is overridden in the examples
     public String getVehicleType() {
         return "Generic Vehicle";
     }
@@ -110,9 +108,10 @@ class Car extends Vehicle {
 // overrides the getVehicleType method from Vehicle
 class Truck extends Vehicle {
 
-    // Example of an additional attribute specific to trucks
+    // specific to trucks
     private int loadCapacity;
 
+    // constructor 
     public Truck(String make, int year, int mileage, int loadCapacity) {
         super(make, year, mileage);
         this.loadCapacity = loadCapacity;
@@ -229,7 +228,7 @@ public class VehicleRegister {
 
                 case "2":
                     // Register a new vehicle for a driver
-                    System.out.print("Enter driver name: ");
+                    System.out.print("Enter driver name ");
                     String driverName = scanner.nextLine();
                     // find the driver in the registry - findDriverByName() is a public method of the VehicleRegistry class
                     // it returns a Driver object if found, otherwise it returns null
@@ -264,14 +263,12 @@ public class VehicleRegister {
                         // register the car with the driver
                         // registerVehicle() is a public method of the Driver class
                         driver.registerVehicle(car);
-                        System.out.println("Car registered successfully!");
                     } else if(vehicleType.equals("2")) {
                         // Truck
                         System.out.print("What is the load capacity of the truck? ");
                         int loadCapacity = Integer.parseInt(scanner.nextLine());
                         Truck truck = new Truck(make, year, mileage, loadCapacity);
                         driver.registerVehicle(truck);
-                        System.out.println("Truck registered successfully!");
                     } else {
                         System.out.println("Invalid vehicle type.");
                     }
@@ -299,7 +296,7 @@ public class VehicleRegister {
                     // Get names of drivers who have vehicles older than 10 years
                     List<String> driverNames = vehicleRegistry.getDriversWithVehiclesOlderThanTenYears();
                     if(driverNames.isEmpty()) {
-                        System.out.println("No drivers found with vehicles older than 10 years.");
+                        System.out.println("No drivers found");
                     } else {
                         System.out.println("Drivers with vehicles older than 10 years:");
                         for(String dn : driverNames) {
@@ -323,9 +320,8 @@ public class VehicleRegister {
 }
 
 
-
-//  VehicleRegistry - this helper class 
-// manages the list of drivers and their vehicles
+//  VehicleRegistry - this helper class has public methods
+// that are used by the main class to manage the list of drivers and their vehicles
 class VehicleRegistry {
 
     // private list of drivers
@@ -349,7 +345,7 @@ class VehicleRegistry {
         return null;
     }
 
-    // Gets the vehicles for a driver
+    // returns the list of vehicles for a specified driver
     public List<Vehicle> getVehiclesForDriver(String driverName) {
         Driver driver = findDriverByName(driverName);
         if(driver != null) {
@@ -360,14 +356,13 @@ class VehicleRegistry {
 
     public List<String> getDriversWithVehiclesOlderThanTenYears() {
 
-
         List<String> driverNames = new ArrayList<>();
         // iterate through the list of drivers
         for(Driver d : drivers) {
             // iterate all drivers vehicles
-            for(Vehicle v : d.getVehicles()) {
+            for(Vehicle vehicle : d.getVehicles()) {
                 // if older than 10
-                if(v.isOlderThanTenYears()) {
+                if(vehicle.isOlderThanTenYears()) {
                     driverNames.add(d.getName());
                     break;
                 }
