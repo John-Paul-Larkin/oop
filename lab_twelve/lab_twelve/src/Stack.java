@@ -179,7 +179,7 @@ public class Stack {
         return Arrays.toString(Arrays.copyOfRange(myStack, 0, size));}
 
     public void randomise() {
-        // randomise the stack order
+        // randomise the stack order - to test the sorting algorithms
         // If stack is empty or has only one element, no need to shuffle
         if (size <= 1) {
             return;
